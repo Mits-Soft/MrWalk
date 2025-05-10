@@ -20,19 +20,28 @@ class MrWalk:
         
         self.root_path = root_path
 
-    def walk(self):
+    def walk(self, extensions: list = None, exclude: list = None):
         mrwalk = {}
         for root, dirs, files in os.walk(self.root_path):
             root_parts = Path(root).parts
             current_level = mrwalk
+            for d in dirs:
+                if d in exclude:
+                    dirs.remove(d)
             for part in root_parts:
-                current_level = current_level.setdefault(part, {})
+                if part not in exclude:
+                    current_level = current_level.setdefault(part, {})
             print(f"Root: {root}")
             for dir in dirs:
-                current_level[dir] = {}
-                print(f"Folder: {dir}")
+                if dir not in exclude:
+                    current_level[dir] = {}
+                    print(f"Folder: {dir}")
             for file in files:
-                current_level[file] = Path(file).suffix if os.path.isfile(os.path.join(root, file)) else "unknown"
+                f = Path(file)
+                if extensions == None:
+                    current_level[file] = f.suffix if os.path.isfile(os.path.join(root, file)) else "unknown"
+                if not extensions == None and f.suffix in extensions:
+                    current_level[file] = f.suffix if os.path.isfile(os.path.join(root, file)) else "unknown"
                 print(f"File: {file}")
         return mrwalk
 

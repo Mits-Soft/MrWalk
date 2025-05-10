@@ -1,7 +1,7 @@
 from .mrwalk import MrWalk
 
 """
-MrWAlk.
+MrWalk
 
 A Python library that allows retrieving a directory info recursively
 """
