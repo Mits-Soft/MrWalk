@@ -19,6 +19,7 @@ class MrWalk:
             raise NotADirectoryError(f"The path {root_path} is not a directory")
         
         self.root_path = root_path
+        self.mrwalk = {}
 
     def walk(self, extensions: list = None, exclude: list = None):
         mrwalk = {}
@@ -43,7 +44,32 @@ class MrWalk:
                 if not extensions == None and f.suffix in extensions:
                     current_level[file] = f.suffix if os.path.isfile(os.path.join(root, file)) else "unknown"
                 print(f"File: {file}")
+        self.mrwalk = mrwalk
         return mrwalk
+    
+    def prune(self, selection: list = None):
+        if self.mrwalk and selection:
+            ns = self.mrwalk
+            for s in selection[:-1]:
+                ns = ns.get(s, {})
+            if selection[-1] in ns:
+                del ns[selection[-1]]
+        return self.mrwalk
+    
+    # def tree(self, current=None, prefix=""):
+    #     output = self.create_tree(current, prefix)
+    #     return "MrWalker\n".join(output)
+
+    def tree(self, current=None, prefix=""):
+        if current is None:
+            current = self.mrwalk
+
+        tree_output = ""
+        for key, value in current.items():
+            tree_output += f"{prefix}├── {key}\n"
+            if isinstance(value, dict):
+                tree_output += self.tree(value, prefix + "│   ")
+        return tree_output
 
 # Example usage:
 # root_path = "." / "source" / "jsondot"
