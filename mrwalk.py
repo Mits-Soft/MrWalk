@@ -55,10 +55,6 @@ class MrWalk:
             if selection[-1] in ns:
                 del ns[selection[-1]]
         return self.mrwalk
-    
-    # def tree(self, current=None, prefix=""):
-    #     output = self.create_tree(current, prefix)
-    #     return "MrWalker\n".join(output)
 
     def tree(self, current=None, prefix=""):
         if current is None:

@@ -1,0 +1,6 @@
+README.md
+setup.py
+MrWalk.egg-info/PKG-INFO
+MrWalk.egg-info/SOURCES.txt
+MrWalk.egg-info/dependency_links.txt
+MrWalk.egg-info/top_level.txt
