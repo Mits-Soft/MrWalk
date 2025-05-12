@@ -10,3 +10,4 @@ __version__ = "0.1.0"
 __author__ = 'Marco Antonio Calviño Coira'
 __credits__ = '2025 MitsSoft'
 
+MrWalk = MrWalk

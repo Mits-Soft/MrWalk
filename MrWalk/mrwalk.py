@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 
 class MrWalk:
-    def __init__(self, root_path):
+    def __init__(self, root_path = '.'):
         if not isinstance(root_path, str):
             raise TypeError("root_path must be a string")
         
@@ -21,7 +21,7 @@ class MrWalk:
         self.root_path = root_path
         self.mrwalk = {}
 
-    def walk(self, extensions: list = None, exclude: list = None):
+    def walk(self, extensions: list = [], exclude: list = []):
         mrwalk = {}
         for root, dirs, files in os.walk(self.root_path):
             root_parts = Path(root).parts
@@ -39,11 +39,12 @@ class MrWalk:
                     print(f"Folder: {dir}")
             for file in files:
                 f = Path(file)
-                if extensions == None:
-                    current_level[file] = f.suffix if os.path.isfile(os.path.join(root, file)) else "unknown"
-                if not extensions == None and f.suffix in extensions:
-                    current_level[file] = f.suffix if os.path.isfile(os.path.join(root, file)) else "unknown"
-                print(f"File: {file}")
+                if file not in exclude:
+                    if extensions == None:
+                        current_level[file] = f.suffix if os.path.isfile(os.path.join(root, file)) else "unknown"
+                    if not extensions == None and f.suffix in extensions:
+                        current_level[file] = f.suffix if os.path.isfile(os.path.join(root, file)) else "unknown"
+                    print(f"File: {file}")
         self.mrwalk = mrwalk
         return mrwalk
     
