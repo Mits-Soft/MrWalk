@@ -49,13 +49,32 @@ class MrWalk:
         return mrwalk
     
     def prune(self, selection: list = None):
-        if self.mrwalk and selection:
-            ns = self.mrwalk
-            for s in selection[:-1]:
-                ns = ns.get(s, {})
-            if selection[-1] in ns:
-                del ns[selection[-1]]
+        mw = self.mrwalk
+        mwk = list(mw.keys())[0]
+        mwv = list(mw.values())[0]
+        result = self.prune_dictionary(mwv, selection)   
+        self.mrwalk[mwk] = result
         return self.mrwalk
+    
+    def prune_dictionary(self, dictionary, keys_to_remove):
+        """
+        Removes specified keys from a nested dictionary.
+
+        :param dictionary: The original dictionary to prune.
+        :param keys_to_remove: List of keys to be removed.
+        :return: The pruned dictionary.
+        """
+        if isinstance(dictionary, dict):
+            # Create a new dictionary excluding the keys to remove
+            return {k: self.prune_dictionary(v, keys_to_remove)
+                    for k, v in dictionary.items()
+                    if k not in keys_to_remove}
+        elif isinstance(dictionary, list):
+            # Recursively apply pruning to elements of lists
+            return [self.prune_dictionary(element, keys_to_remove) for element in dictionary]
+        else:
+            # If it is a non-compound value, return it directly
+            return dictionary
 
     def tree(self, current=None, prefix=""):
         if current is None:
